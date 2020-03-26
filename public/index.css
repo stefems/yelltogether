@@ -1,0 +1,96 @@
+body {
+    font-family: Helvetica, Arial, sans-serif;
+    width: 80vw;
+    margin: 0 auto;
+}
+.title {
+    text-align: center;
+    color: #6D6D6D;
+}
+.shoutButtonContainer {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0;
+}
+.shoutButton {
+    background: #6D6D6D;
+    border-radius: 4px;
+    color: white;
+    padding: 12px;
+    font-size: 32px;
+}
+.shoutButton:hover {
+    background: #383737;
+    cursor: pointer;
+}
+.content {
+    display: flex;
+    height: 66vh;
+}
+.gifContainer {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#gif {
+    max-width: 100%;
+    height: 100%;
+    margin: auto 0 auto auto;
+}
+.chatContainer {
+    width: 50%;
+    padding: 0 8px;
+    background: #F2F2F2;
+    display: flex;
+    flex-direction: column;
+}
+#messages {
+    overflow-y: auto;
+    height: calc(100% - 24px);
+    text-transform: uppercase;
+}
+.profileImage {
+    margin-right: 8px;
+    border-radius: 50%;
+}
+.messageContainer {
+    display: flex;
+}
+.messageText {
+
+}
+.messageTime {
+
+}
+.sendChatContainer {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 0 -8px;
+}
+.chatInput {
+    width: 80%;
+    outline: none;
+    font-size: 18px;
+    padding-left: 8px;
+    text-transform: uppercase;
+}
+.sendChatButton {
+    width: 20%;
+    background: #6D6D6D;
+    color: white;
+    padding: 12px;
+    text-align: center;
+}
+.sendChatButton:hover {
+    background: #383737;
+    cursor: pointer;
+}
+#source {
+    margin-top: 8px;
+    font-style: italic;
+    color: grey;
+}
+.giphy {
+    margin-top: 8px;
+}

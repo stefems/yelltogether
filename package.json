@@ -1,0 +1,21 @@
+{
+  "name": "websockets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "@giphy/js-fetch-api": "^1.5.2",
+    "express": "^4.17.1",
+    "fast-average-color": "^6.0.2",
+    "node-fetch": "^2.6.0",
+    "nodemon": "^2.0.2",
+    "ws": "^7.2.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

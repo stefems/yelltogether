@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Websocket Practice</title>
+	<link rel="stylesheet" href="./index.css">
+</head>
+<body>
+	<h1 class="title">SHOUT WITH YOUR FRIENDS <span id="count">(0)</span></h1>
+	<div class="shoutButtonContainer">
+		<div id="shout" class="shoutButton" onClick="fire()">SHOUT</div>
+	</div>
+	<div class="content">
+		<div class="gifContainer image-container">
+			<img id="gif" alt="gif" src="https://media2.giphy.com/media/TGoPvLtuFkPNAAyi0p/giphy.gif?cid=ecf05e47c55c480ebdf0bed1ead57020191b9ab1232cc3f6&rid=giphy.gif" />
+		</div>
+		<div class="chatContainer">
+			<div id="messages"></div>
+			<div class="sendChatContainer">
+				<input class="chatInput" onkeypress="handle(event)" id="message" ></input>
+				<div class="sendChatButton" onClick="chat()">CHAT IN ALL CAPS</div>
+			</div>
+		</div>
+	</div>
+	<div id="source">https://media2.giphy.com/media/TGoPvLtuFkPNAAyi0p/giphy.gif?cid=ecf05e47c55c480ebdf0bed1ead57020191b9ab1232cc3f6&rid=giphy.gif</div>
+	<div class="giphy">powered by giphy api stuffs</div>
+	<script>
+		const animals = ['Ant.png','Aquarium.png','Badger.png','Bat Face.png','Bear.png','Beaver.png','Bee.png','Bird.png','Bug.png','Bull.png','Bumblebee.png','Butterfly.png','Cat Footprint.png','Cat.png','Caterpillar.png','Chicken.png','Clown Fish.png','Corgi.png','Cow.png','Crab.png','Deer.png','Dinosaur.png','Dog Park.png','Dog.png','Dolphin.png','Dragonfly.png','Duck.png','Elephant.png','Falcon.png','Fish Food.png','Fish.png','Fly.png','Frog.png','Giraffe.png','Gorilla.png','Grasshopper.png','Hornet Hive.png','Hornet.png','Horse.png','Hummingbird.png','Icons8 Logo.png','Insect.png','Kangaroo.png','Kiwi Bird.png','Ladybird.png','Leopard.png','Lion.png','Llama.png','Mite.png','Mosquito.png','Octopus.png','Panda.png','Pig With Lipstick.png','Pig.png','Prawn.png','Puffin Bird.png','Rabbit.png','Rhinoceros.png','Seahorse.png','Shark.png','Sheep.png','Snail.png','Spider.png','Starfish.png','Stork.png','Tentacles.png','Turtle.png','Unicorn.png','Wasp.png','Whale.png','Wolf.png'];
+		const colors = ["#99FFCC", "#CCCCFF", "#CCFFFF", "#FFCC99", "#FFCCCC", "#FFCCFF", "#FFFF99"];
+		const user_name = "";
+		const color = colors[Math.floor(Math.random() * colors.length)];
+		const user_profile_img = animals[Math.floor(Math.random() * animals.length)];
+		const user_id = user_profile_img + "_" + color;
+	</script>
+	<script>
+		const handle = (e) => {
+			if (e.keyCode === 13){
+				e.preventDefault();
+				chat();
+			}
+		}
+		const getElement = (id) => document.getElementById(id);
+		const add_scream = (file_name) => {
+			const audio = document.createElement("audio");
+			audio.setAttribute("autoplay", "true");
+			audio.setAttribute("src", "./screams/"+file_name);
+			getElement('messages').appendChild(audio);
+			window.setTimeout( () => audio.remove(), 10000);
+		}
+		const addMessage = (message, user_id) => {
+			var atBottom = isElementScrolledToBottom(getElement('messages'));
+			const image = user_id.split("_")[0];
+			const color = user_id.split("_")[1];
+			const pTag = document.createElement('p');
+			pTag.setAttribute("class", "messageContainer");
+			let profile = document.createElement("img");
+			profile.setAttribute("src", "./animals/"+image);
+			profile.style.border = `solid ${color} 2px`;
+			profile.setAttribute("class", "profileImage");
+			pTag.appendChild(profile);
+			pTag.appendChild(document.createTextNode(message));
+			getElement('messages').appendChild(pTag);
+			if(atBottom) {
+				scrollToBottom(getElement('messages'));
+			}
+		};
+		const ws = new WebSocket('ws://localhost:3030');
+		ws.onopen = () => {
+			ws.send(null);
+		};
+		ws.onmessage = (event) => {
+			const data = JSON.parse(event.data);
+			if (data.message) {
+				const { message, user_id } = data;
+				  addMessage(message, user_id);
+			} else if (data.count) {
+				getElement("count").innerHTML = `(${data.count})`;
+			} else {
+				const { gif, audio, user_id } = data;
+				getElement("gif").setAttribute("src", gif);
+				getElement("source").innerHTML = gif;
+				addMessage("*screamed*", user_id);
+				add_scream(audio);
+			}
+		};
+		const fire = () => {
+			ws.send(JSON.stringify({message: "null", user_id: user_id}));
+		};
+		const chat = () => {
+			if (getElement('message').value === "") {
+				return;
+			}
+			ws.send(JSON.stringify({message: getElement('message').value, user_id: user_id}));
+			getElement('message').value = '';
+		};
+		//function to check if element is scrolled to the bottom
+		function isElementScrolledToBottom(el) {
+			if (el.scrollTop >= (el.scrollHeight - el.offsetHeight)) {
+				return true;
+			}
+			return false;
+		}
+
+		//function to scroll to bottom
+		function scrollToBottom(el) {
+			el.scrollTop = el.scrollHeight;
+		}
+	</script>
+</body>
+</html>
