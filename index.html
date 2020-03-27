@@ -63,7 +63,8 @@
 				scrollToBottom(getElement('messages'));
 			}
 		};
-		const ws = new WebSocket('ws://localhost:3030');
+		const HOST = location.origin.replace(/^http/, 'ws')
+		const ws = new WebSocket(HOST);
 		ws.onopen = () => {
 			ws.send(null);
 		};
