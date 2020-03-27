@@ -13,7 +13,7 @@ const port = process.env.PORT || 8765;
 app.listen(port, () => {
   console.log(`listening http://localhost:${port}`);
 });
-const socketServer = new WebSocket.Server({port: 3030});
+const socketServer = new WebSocket.Server();
 
 const url = "https://api.giphy.com/v1/gifs/random?api_key=Qv3h2IWU87lkdBEy7C7Gw4JCw5BkGZF0&tag=shout";
 const getGif = async () => {
