@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<script src="/socket.io/socket.io.js"></script>
 	<title>Websocket Practice</title>
 	<link rel="stylesheet" href="./index.css">
 </head>
@@ -32,6 +33,7 @@
 		const user_id = user_profile_img + "_" + color;
 	</script>
 	<script>
+		var socket = io();
 		const handle = (e) => {
 			if (e.keyCode === 13){
 				e.preventDefault();
@@ -64,15 +66,15 @@
 			}
 		};
 		const HOST = location.origin.replace(/^http/, 'ws')
-		const ws = new WebSocket(HOST);
-		ws.onopen = () => {
-			ws.send(null);
-		};
-		ws.onmessage = (event) => {
-			const data = JSON.parse(event.data);
+		socket.on('connection', (socket) => {
+			socket.emit('connect', "null");
+			
+		});
+		socket.on('message', (event) => {
+			const data = JSON.parse(event);
 			if (data.message) {
 				const { message, user_id } = data;
-				  addMessage(message, user_id);
+				addMessage(message, user_id);
 			} else if (data.count) {
 				getElement("count").innerHTML = `(${data.count})`;
 			} else {
@@ -82,18 +84,17 @@
 				addMessage("*screamed*", user_id);
 				add_scream(audio);
 			}
-		};
+		});
 		const fire = () => {
-			ws.send(JSON.stringify({message: "null", user_id: user_id}));
+			socket.emit('message', JSON.stringify({message: "null", user_id: user_id}));
 		};
 		const chat = () => {
 			if (getElement('message').value === "") {
 				return;
 			}
-			ws.send(JSON.stringify({message: getElement('message').value, user_id: user_id}));
+			socket.emit('message', JSON.stringify({message: getElement('message').value, user_id: user_id}));
 			getElement('message').value = '';
 		};
-		//function to check if element is scrolled to the bottom
 		function isElementScrolledToBottom(el) {
 			if (el.scrollTop >= (el.scrollHeight - el.offsetHeight)) {
 				return true;
