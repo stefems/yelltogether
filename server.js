@@ -17,8 +17,9 @@ const server = express()
 });
 const socketServer = socketIO(server);
 
+const token = process.env.giphy || require('./.env').giphy;
 
-const url = "https://api.giphy.com/v1/gifs/random?api_key=Qv3h2IWU87lkdBEy7C7Gw4JCw5BkGZF0&tag=shout";
+const url = `https://api.giphy.com/v1/gifs/random?api_key=${token}&tag=shout`;
 const getGif = async () => {
     try {
       const response = await fetch(url);
@@ -34,7 +35,6 @@ socketServer.on('connection', (socketClient) => {
   });
   socketServer.emit('message', JSON.stringify({count: socketServer.engine.clientsCount}));
   socketClient.on('message', async (json) => {
-    console.log(json);
     const { user_id, message } = JSON.parse(json);
     if (message !== "null") {
       socketServer.emit('message', JSON.stringify({message: message, user_id: user_id}));
