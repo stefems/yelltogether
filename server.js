@@ -41,7 +41,8 @@ socketServer.on('connection', (socketClient) => {
     } else {
         const random_file_name = files[Math.floor(Math.random() * files.length)];
         const { data } = await getGif();
-        socketServer.emit('message', JSON.stringify({audio: random_file_name, gif: data.image_url, user_id: user_id}));
+        const imageUrl = data.images.original.url
+        socketServer.emit('message', JSON.stringify({audio: random_file_name, gif: imageUrl, user_id: user_id}));
     }
   });
 });
